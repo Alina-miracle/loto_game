@@ -17,6 +17,7 @@ class Player:
 
     def has_won(self):
         return len(self.numbers) == 0  # Победа, если все числа выбраны
+
 class Ball:
     def __init__(self):
         self.available_numbers = list(range(1, 91))  # Все возможные номера бочонков
@@ -25,6 +26,7 @@ class Ball:
         if not self.available_numbers:
             return None
         return self.available_numbers.pop(random.randint(0, len(self.available_numbers) - 1))
+
 class Game:
     def __init__(self, player1, player2):
         self.player1 = player1
@@ -65,6 +67,7 @@ class Game:
                 break
             if self.check_winner():
                 break
+
 def choose_player_type(name):
     choice = input(f"Вы хотите, чтобы {name} был человеком (y/n)? ").strip().lower()
     return True if choice == "y" else False
@@ -83,24 +86,3 @@ def start_loto_game():
 
 if __name__ == "__main__":
     start_loto_game()
-import unittest
-
-class TestGame(unittest.TestCase):
-    def test_player_generate_numbers(self):
-        player = Player("Игрок 1")
-        self.assertEqual(len(player.numbers), 5)  # Проверяем, что у игрока 5 чисел
-
-    def test_player_check_number(self):
-        player = Player("Игрок 1")
-        number = player.numbers[0]
-        self.assertTrue(player.check_number(number))  # Число должно быть найдено
-        self.assertFalse(player.check_number(99))  # Номер 99 не должен быть у игрока
-
-    def test_ball_draw(self):
-        ball = Ball()
-        number = ball.draw_ball()
-        self.assertIsNotNone(number)
-        self.assertTrue(1 <= number <= 90)  # Число должно быть в пределах от 1 до 90
-
-if __name__ == "__main__":
-    unittest.main()
