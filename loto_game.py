@@ -18,6 +18,15 @@ class Player:
     def has_won(self):
         return len(self.numbers) == 0  # Победа, если все числа выбраны
 
+    def __str__(self):
+        return f"Игрок {self.name}, компьютер: {self.is_computer}, оставшиеся числа: {self.numbers}"
+
+    def __eq__(self, other):
+        if isinstance(other, Player):
+            return self.name == other.name
+        return False
+
+
 class Ball:
     def __init__(self):
         self.available_numbers = list(range(1, 91))  # Все возможные номера бочонков
@@ -26,6 +35,15 @@ class Ball:
         if not self.available_numbers:
             return None
         return self.available_numbers.pop(random.randint(0, len(self.available_numbers) - 1))
+
+    def __str__(self):
+        return f"Осталось {len(self.available_numbers)} бочонков"
+
+    def __eq__(self, other):
+        if isinstance(other, Ball):
+            return self.available_numbers == other.available_numbers
+        return False
+
 
 class Game:
     def __init__(self, player1, player2):
@@ -68,21 +86,10 @@ class Game:
             if self.check_winner():
                 break
 
-def choose_player_type(name):
-    choice = input(f"Вы хотите, чтобы {name} был человеком (y/n)? ").strip().lower()
-    return True if choice == "y" else False
+    def __str__(self):
+        return f"Игра между {self.player1.name} и {self.player2.name}, очередь игрока: {self.turn}"
 
-def start_loto_game():
-    player1_name = input("Введите имя первого игрока: ")
-    player1_type = choose_player_type(player1_name)
-    player1 = Player(player1_name, player1_type)
-
-    player2_name = input("Введите имя второго игрока: ")
-    player2_type = choose_player_type(player2_name)
-    player2 = Player(player2_name, player2_type)
-
-    game = Game(player1, player2)
-    game.start_game()
-
-if __name__ == "__main__":
-    start_loto_game()
+    def __eq__(self, other):
+        if isinstance(other, Game):
+            return self.player1 == other.player1 and self.player2 == other.player2 and self.turn == other.turn
+        return False
