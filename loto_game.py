@@ -17,6 +17,16 @@ class Player:
 
     def has_won(self):
         return len(self.numbers) == 0  # Победа, если все числа выбраны
+
+    def __str__(self):
+        return f"Игрок {self.name}, компьютер: {self.is_computer}, оставшиеся числа: {self.numbers}"
+
+    def __eq__(self, other):
+        if isinstance(other, Player):
+            return self.name == other.name
+        return False
+
+
 class Ball:
     def __init__(self):
         self.available_numbers = list(range(1, 91))  # Все возможные номера бочонков
@@ -25,6 +35,16 @@ class Ball:
         if not self.available_numbers:
             return None
         return self.available_numbers.pop(random.randint(0, len(self.available_numbers) - 1))
+
+    def __str__(self):
+        return f"Осталось {len(self.available_numbers)} бочонков"
+
+    def __eq__(self, other):
+        if isinstance(other, Ball):
+            return self.available_numbers == other.available_numbers
+        return False
+
+
 class Game:
     def __init__(self, player1, player2):
         self.player1 = player1
@@ -65,42 +85,11 @@ class Game:
                 break
             if self.check_winner():
                 break
-def choose_player_type(name):
-    choice = input(f"Вы хотите, чтобы {name} был человеком (y/n)? ").strip().lower()
-    return True if choice == "y" else False
 
-def start_loto_game():
-    player1_name = input("Введите имя первого игрока: ")
-    player1_type = choose_player_type(player1_name)
-    player1 = Player(player1_name, player1_type)
+    def __str__(self):
+        return f"Игра между {self.player1.name} и {self.player2.name}, очередь игрока: {self.turn}"
 
-    player2_name = input("Введите имя второго игрока: ")
-    player2_type = choose_player_type(player2_name)
-    player2 = Player(player2_name, player2_type)
-
-    game = Game(player1, player2)
-    game.start_game()
-
-if __name__ == "__main__":
-    start_loto_game()
-import unittest
-
-class TestGame(unittest.TestCase):
-    def test_player_generate_numbers(self):
-        player = Player("Игрок 1")
-        self.assertEqual(len(player.numbers), 5)  # Проверяем, что у игрока 5 чисел
-
-    def test_player_check_number(self):
-        player = Player("Игрок 1")
-        number = player.numbers[0]
-        self.assertTrue(player.check_number(number))  # Число должно быть найдено
-        self.assertFalse(player.check_number(99))  # Номер 99 не должен быть у игрока
-
-    def test_ball_draw(self):
-        ball = Ball()
-        number = ball.draw_ball()
-        self.assertIsNotNone(number)
-        self.assertTrue(1 <= number <= 90)  # Число должно быть в пределах от 1 до 90
-
-if __name__ == "__main__":
-    unittest.main()
+    def __eq__(self, other):
+        if isinstance(other, Game):
+            return self.player1 == other.player1 and self.player2 == other.player2 and self.turn == other.turn
+        return False
